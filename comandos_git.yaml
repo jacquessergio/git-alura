@@ -1,0 +1,197 @@
+#Primeiro passo (ANTES DE TENTAR EXECUTAR QUALQUER COMANDO NO GIT)
+
+git init #inicia o git no repositório
+
+#Adicionando o nome do usuário que vai commitar (--global (opcional))
+
+git config --global username.name  "Seu nome"
+git config --global username.email "seu_email@exemplo.com"
+
+# _COMANDOS BÁSICOS -> (UTEIS)
+
+ls                        # lista os arquivos do diretorio
+git ls-files              # mostra os arquivos controlados pelo git
+git whatchanged           # mostra detalhes  dos arquivos que foi alterado/adicionado
+git whatchanged -p        # mostra com mais detalhes  dos arquivos que foi alterado/adicionado
+git log                   # mostra o historico dos commits
+git log --pretty=oneline  # mostra historico de commits por linha
+git log --pretty=short    # mostra historico de commits por um visão mais simples
+git log --pretty=full     # mostra historico de commits por um visão mais detalhada
+git log -p                # mostra os arquivos alterados (diff)
+git log --stat            # mostra as alterações nos arquivos de forma mais simples
+
+# _SINCRONIZANDO RESPOSITÓRIOS -> (REMOTO to LOCAL)
+
+git remote add origin https://github.com/jacquessergio/git-alura.git #Adiciona o (repositório/diretório) Remoto -> origin é o apelido do repositório
+git remote  # mostra os (repositórios/diretórios) remotos
+git push origin master #  Envia as alterações/arquivos para a branch Master (GitHub)
+
+# _CLONANDO UM REPOSITÓRIO -> (REMOTO to LOCAL)
+
+git clone https://github.com/jacquessergio/git-alura.git #Clona o repositório
+
+# _CICLO BÁSICO DO GIT -> (LOCAL to REMOTO)
+
+git status                         # mostra o estado atual dos arquivos (se contém novos arquivos e/ou alterados)
+git add <nome_do_arquivo>          # adiciona somente o arquivo a ser commitado
+git add .                          # adiciona todos os arquivos no commit
+git commit -m "mensagem do commit" # comita os arquivos
+git push origin master             # Envia as alterações para o repositório remoto (Branch Master)
+
+# _ORGANIZANDO O TRABALHO COM BRANCHES
+
+git branch                          # Lista todas as branches (LOCAIS)
+git branch -r                       # Lista todas as branches (REMOTAS)
+git branch <nome_da_branch>         # Cria uma nova Branch (LOCAL)
+git checkout -b <nome_da_branch>    # Cria uma nova Branch e já entra na (checkout) Branch criada
+git push origin <nome_da_branch>    # Envia a nova Branch para o respositório (LOCAL to REMOTO) -> (NÃO RECOMENDADO) ->  (REMOTO != LOCAL)
+git push origin -u <nome_da_branch> # Envia a nova Branch para o respositório (LOCAL to REMOTO) -> (RECOMENDADO) -> 
+                                    #-> (OBS) paramentro (-u) diz que a Branch REMOTA é exatamente igual a Branch LOCAL (REMOTO == LOCAL)
+git checkout <nome_da_branch>       # Muda de Branch
+git branch -t <nome_da_branch> origin/<nome_da_branch> # Cria a Branch LOCAL igual Branch (REMOTA) -> (RECOMENDADO) -> (LOCAL == REMOTA)
+ 
+# _RESOLUÇÃO DE CONFLITOS
+
+# NOTE:     -> Conflitos são gerados quando dois ou mais desenvolvedores estão (atuando/mexendo) no mesmo arquivo. ->
+#           -> Quando as alterações não são feitas na mesma linha, o GIT tenta fazer o Merge de forma automática. ->
+#           -> Quando as alterações são feitas na mesma linha, o GIT indentifica e gera uma conflito. -> (CORREÇÃO)
+#
+# CORREÇÃO: -> É necessário baixar o(s) arquivo(s) e corrigir de forma -> (MANUAL) os conflitos e decidir qual o melhor caminho seguir. ->
+# MANUAL:   -> Corrigir o(s) conflitos(s) e comitar o(s) resultado(s)  -> (DEMO) -> (SEQUÊNCIA)
+
+# DEMO:     -> <<<<<<<<< HEAD
+#                   Tudo o que estiver aqui é o que foi alterado. -> (Alterações remotas :: (Outros desenvolvedores))
+#              =============
+#                   Tudo o que estiver aqui, é o que estava antes -> (Minhas anterações)
+#              >>>>>>>>>> 58989fsdf8ds9fsdlkr438908590 (ID do commit -> Hash Genérico)
+
+# SEQUÊNCIA: -> Após as mudanças, executar os comandos:
+
+git add <nome_do_arquivo>
+git commit -m 'msg commit' 
+git push
+
+# _BOAS PRATICAS NO GIT
+
+# NOTE:   -> Trabalhar com varios usuários de forma a minimizar os conflitos   -> (SOLUÇÃO)
+
+# SOLUÇÃO -> Cada desenvolvedor devem trabalhar com Branches Locais próprias   -> (DEMO)
+
+# DEMO    -> Criar a Branch local ::-> Topico (_ORGANIZANDO O TRABALHO COM BRANCHES)
+#         -> Trabalhar na Branch local após concluir o trabalho -> 
+#         -> Executar os comandos: 
+
+git add <nome_do_arquivo>
+git commit -m 'msg commit' # -> (SINCRONIZAR ALTERAÇÕES)
+
+# SINCRONIZAR ALTERAÇÕES -> Jogar as ateranções da Branch (LOCAL) para Branch (REMOTA) (Master /ou outra Branch Remota) -> 
+#                        -> Para que os outros desenvolvedores possam pegar essas alterações (DEMO)
+
+# DEMO    -> Mudar para Branch (Master /ou outra Branch Local)
+#         -> Executar os comandos:
+# SIMULANDO O DESENVOLVEDOR JOAO
+
+git checkout <nome_da_branch_remota>)    # -> Mudar para branch REMOTA ->
+git fetch /ou git pull)           # -> Para verificar se existem alterações e baixar
+git merge <nome_da_branch_local>  # -> Trazer os commits da Branch (LOCAL_CRIADA) para Branch (LOCAL_MASTER)
+git push                          # -> Mandar alterações da Branch (LOCAL_MASTER) para Branch (REMOTA_MASTER)
+
+# PROCESSO INVERSO -> Atualizar a Branch (LOCAL) com as alterações da Branch (REMOTA) ->
+#                  -> (git rebase) -> Atualiza uma Branch com base em Outra - > Evita diversos conflitos de Merge ->
+#                  -> Aplica commit a commit
+
+# DEMO
+# SIMUMANDO O DESENVOLVEDOR JOAQUIM
+git rebase <nome_da_branch_remota_base> <nome_da_branch_local_base>
+git checkout <nome_da_branch_remota>)    # -> Mudar para branch REMOTA ->
+git push                                 # -> Mandar alterações da Branch (REMOTA_MASTER)
+
+# SIMULANDO CONFLITO (CONFLICT) QUANDO ENCONTRA 2 OU MAIS CONFLITOS COM O GIT REBASE
+
+# DEMO CONFLITO 1:     -> <<<<<<<<< HEAD
+#                      Tudo o que estiver aqui é o que foi alterado. -> (Alterações remotas :: (Outros desenvolvedores))
+#                      =============
+#                      Tudo o que estiver aqui, é o que estava antes -> (Minhas anterações)
+#                      >>>>>>>>>> 58989fsdf8ds9fsdlkr438908590 (ID do commit -> Hash Genérico)
+
+# SEQUÊNCIA: -> Após as mudanças, executar os comandos:
+
+git add <nome_do_arquivo>
+git rebase --continue  # -> Encaminha para a resolução do próximo conflito (SE (houver) CORRIGA ANTES (MANUAL) ->
+#                                                                        -> SE NÃO (houver) RESOLVE e APLICA (AUTOMATICO))
+
+# DEMO CONFLITO 2:     -> <<<<<<<<< HEAD
+#                      Tudo o que estiver aqui é o que foi alterado. -> (Alterações remotas :: (Outros desenvolvedores))
+#                      =============
+#                      Tudo o que estiver aqui, é o que estava antes -> (Minhas anterações)
+#                      >>>>>>>>>> 58989fsdADSASD9fsdlkr438908590 (ID do commit -> Hash Genérico)
+
+# SEQUÊNCIA: -> Após as mudanças, executar os comandos:
+
+git add <nome_do_arquivo>
+git rebase --continue  # -> Encaminha para a resolução do próximo conflito (SE (houver) CORRIGA ANTES (MANUAL) ->
+#                                                                        -> SE NÃO (houver) RESOLVE e APLICA (AUTOMATICO))
+
+# SEQUÊNCIA: -> Após as mudanças, executar os comandos:
+
+git merge <nome_da_branch_local>  # -> Trazer os commits da Branch (LOCAL_CRIADA) para Branch (LOCAL_MASTER)
+git push                          # -> Mandar alterações da Branch (LOCAL_MASTER) para Branch (REMOTA_MASTER)
+
+
+# _CONTROLE AVANÇADO DE ALTERAÇÕES
+
+# NOTE: -> Trabalhar com boas Práticas (# _BOAS PRATICAS NO GIT)
+
+# DESFAZENDO ALTERAÇÕES (LOCAL)
+
+# -> (sem adicionar (git add)) Voltando o arquivo para o ultimo estado atual do respositório (Ultimo commit)
+git checkout <nome_do_arquivo>
+
+# -> (com adicionar (git add)) Voltando o arquivo para o ultimo estado atual do respositório (Ultimo commit)
+git reset <nome_do_ultimo_commit> <nome_do_arquivo>
+
+# -> (com adicionar (git add) e com o commit (git commit -m '')) Descartar o commit
+git reset <id_do_ultimo_commit> # -> para consultar o <id_do_ultimo_commit> digite (git log) e copie o id_do_ultimo_commit>
+                                # -> Exemplo de <id_do_ultimo_commit> commit: dbc92dfd1e126113e1418737463a1b6ea8fe6044
+
+# -> (Reverter as alterações de um commit mais antigo.
+git revert <id_do_ultimo_commit> # -> para consultar o <id_do_ultimo_commit> digite (git log) e copie o id_do_ultimo_commit>
+                                 # -> Exemplo de <id_do_ultimo_commit> commit: dbc92dfd1e126113e1418737463a1b6ea8fe6044
+                                 # -> Na tela que ira se abrir -> digitar o novo commit 
+
+# -> guardar os commits em um local temporário antes de subir as alterações
+git stash
+
+# -> vendo o que tem dentro do local temporário
+git stash list
+
+# -> retornando os commits de dentro do local temporário
+git stash pop #->  retorna todos os commits que estão dentro do local temporário
+git stash apply stash@{0} #-> retorna um commit especifico que está dentro do local temporário 
+git stash drop  stash@{0} #-> apagando um commit especifico que está dentro do local temporário 
+
+# Utilizando o bitsect para percorrer commits
+git bitsect start
+git bisect bad  <id_do_commit_ruim> #-> Dizer primeiro qual o commit é ruim para que o bisect possa ir filtrando
+git bisect good <id_do_commit_bom>  #-> Dizer qual commit é bom para que o bisect possa ir filtrando
+
+# NOTE: -> Ir olhando/avaliando o(s) arquivo(s) para ver se as alterações atendem as expectativas
+#       -> Após avaliar ->  dizer para o bisect se o commit/alteração é boa ou ruim  para que o bisect continue filtrando
+git bisect bad <ou> git bisect good
+
+# _TRABALHANDO COM ALIASES (APELIDOS) NO GIT PARA AUTOMATIZAR COMANDOS
+
+# NOTE: ->  Editar o arquivo que fica na pasta do usuário que fica no próprio sistema operacional 
+#       ->  PATH: C:\Users\<nome_do_usuario>\.gitconfig
+#       ->  Abrir o arquivo .gitconfig com um editor de Texto e adicionar a flag [alias] -> (DEMO)
+
+# DEMO
+[alias]
+  st = status #-> Abrevia o comando status (Digitar no console -> (git st))
+  pl = pull   #-> Abrevia o comando pull   (Digitar no console -> (git pl))
+  mg = Merge  #-> Abrevia o comando Merge  (Digitar no console -> (git mg))
+  
+  # Exemplo mais complexo por execução via Shell -> comando shell
+  # Comando automatizando para sincronizar as Branches
+  
+  sc = !git checkout <nome_da_branch_master> && git pull && git checkout <nome_da_branch_criada> && git rebase master <nome_da_branch_master> && git checkout <nome_da_branch_master> && git merge <nome_da_branch_criada> && git push
