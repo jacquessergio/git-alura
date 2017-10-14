@@ -1,13 +1,13 @@
-#Primeiro passo (ANTES DE TENTAR EXECUTAR QUALQUER COMANDO NO GIT)
+Primeiro passo (ANTES DE TENTAR EXECUTAR QUALQUER COMANDO NO GIT):
 
 git init #inicia o git no repositório
 
-#Adicionando o nome do usuário que vai commitar (--global (opcional))
+Adicionando o nome do usuário que vai commitar (--global (opcional)):
 
 git config --global username.name  "Seu nome"
 git config --global username.email "seu_email@exemplo.com"
 
-# _COMANDOS BÁSICOS -> (UTEIS)
+_COMANDOS BÁSICOS -> (UTEIS):
 
 ls                        # lista os arquivos do diretorio
 git ls-files              # mostra os arquivos controlados pelo git
@@ -19,38 +19,46 @@ git log --pretty=short    # mostra historico de commits por um visão mais simpl
 git log --pretty=full     # mostra historico de commits por um visão mais detalhada
 git log -p                # mostra os arquivos alterados (diff)
 git log --stat            # mostra as alterações nos arquivos de forma mais simples
+git log --since=2.days    # Mostrando todos os commits dos últimos 2 dias até o momento atual
+git log --pretty=format: "%h - %an, %ar : %s" # Mostrando o início do hash, quem comitou, quanto tempo atrás, mensagem: descrição do commit:
+git rm nome-do-arquivo    # Deletando arquivos
+git ls-files --deleted | xargs git rm # Deletando todos os aquivos removidos ao mesmo tempo
 
-# _SINCRONIZANDO RESPOSITÓRIOS -> (REMOTO to LOCAL)
+_SINCRONIZANDO RESPOSITÓRIOS -> (REMOTO to LOCAL):
 
 git remote add origin https://github.com/jacquessergio/git-alura.git #Adiciona o (repositório/diretório) Remoto -> origin é o apelido do repositório
 git remote  # mostra os (repositórios/diretórios) remotos
 git push origin master #  Envia as alterações/arquivos para a branch Master (GitHub)
 
-# _CLONANDO UM REPOSITÓRIO -> (REMOTO to LOCAL)
+_CLONANDO UM REPOSITÓRIO -> (REMOTO to LOCAL):
 
 git clone https://github.com/jacquessergio/git-alura.git #Clona o repositório
 
-# _CICLO BÁSICO DO GIT -> (LOCAL to REMOTO)
+_CICLO BÁSICO DO GIT -> (LOCAL to REMOTO):
 
-git status                         # mostra o estado atual dos arquivos (se contém novos arquivos e/ou alterados)
-git add <nome_do_arquivo>          # adiciona somente o arquivo a ser commitado
-git add .                          # adiciona todos os arquivos no commit
-git commit -m "mensagem do commit" # comita os arquivos
-git push origin master             # Envia as alterações para o repositório remoto (Branch Master)
+git status                            # mostra o estado atual dos arquivos (se contém novos arquivos e/ou alterados)
+git add <nome_do_arquivo>             # adiciona somente o arquivo a ser commitado
+git add .                             # adiciona todos os arquivos no commit
+git commit -m "Mensagem do commit"    # comita os arquivos
+git commit -a -m "Mensagem do commit" # adiciona e comita ao mesmo tempo:
+git push origin master                # Envia as alterações para o repositório remoto (Branch Master)
 
-# _ORGANIZANDO O TRABALHO COM BRANCHES
+_ORGANIZANDO O TRABALHO COM BRANCHES:
 
 git branch                          # Lista todas as branches (LOCAIS)
 git branch -r                       # Lista todas as branches (REMOTAS)
+git branch -a                       # Ver branche (REMOTA)
 git branch <nome_da_branch>         # Cria uma nova Branch (LOCAL)
 git checkout -b <nome_da_branch>    # Cria uma nova Branch e já entra na (checkout) Branch criada
 git push origin <nome_da_branch>    # Envia a nova Branch para o respositório (LOCAL to REMOTO) -> (NÃO RECOMENDADO) ->  (REMOTO != LOCAL)
 git push origin -u <nome_da_branch> # Envia a nova Branch para o respositório (LOCAL to REMOTO) -> (RECOMENDADO) -> 
                                     #-> (OBS) paramentro (-u) diz que a Branch REMOTA é exatamente igual a Branch LOCAL (REMOTO == LOCAL)
+git branch -D <nome-dA-branch>      #-> Removendo umA branch
 git checkout <nome_da_branch>       # Muda de Branch
 git branch -t <nome_da_branch> origin/<nome_da_branch> # Cria a Branch LOCAL igual Branch (REMOTA) -> (RECOMENDADO) -> (LOCAL == REMOTA)
- 
-# _RESOLUÇÃO DE CONFLITOS
+git pull origin master              # Trazendo, puxando as alterações feitas por outros usuários
+
+_RESOLUÇÃO DE CONFLITOS:
 
 # NOTE:     -> Conflitos são gerados quando dois ou mais desenvolvedores estão (atuando/mexendo) no mesmo arquivo. ->
 #           -> Quando as alterações não são feitas na mesma linha, o GIT tenta fazer o Merge de forma automática. ->
@@ -71,7 +79,7 @@ git add <nome_do_arquivo>
 git commit -m 'msg commit' 
 git push
 
-# _BOAS PRATICAS NO GIT
+_BOAS PRATICAS NO GIT:
 
 # NOTE:   -> Trabalhar com varios usuários de forma a minimizar os conflitos   -> (SOLUÇÃO)
 
@@ -138,11 +146,14 @@ git merge <nome_da_branch_local>  # -> Trazer os commits da Branch (LOCAL_CRIADA
 git push                          # -> Mandar alterações da Branch (LOCAL_MASTER) para Branch (REMOTA_MASTER)
 
 
-# _CONTROLE AVANÇADO DE ALTERAÇÕES
+_CONTROLE AVANÇADO DE ALTERAÇÕES:
 
 # NOTE: -> Trabalhar com boas Práticas (# _BOAS PRATICAS NO GIT)
 
-# DESFAZENDO ALTERAÇÕES (LOCAL)
+_DESFAZENDO ALTERAÇÕES (LOCAL):
+
+# -> Voltando ao estágio anterior do adicionamento:
+git reset HEAD <nome-do-arquivo>
 
 # -> (sem adicionar (git add)) Voltando o arquivo para o ultimo estado atual do respositório (Ultimo commit)
 git checkout <nome_do_arquivo>
@@ -179,13 +190,14 @@ git bisect good <id_do_commit_bom>  #-> Dizer qual commit é bom para que o bise
 #       -> Após avaliar ->  dizer para o bisect se o commit/alteração é boa ou ruim  para que o bisect continue filtrando
 git bisect bad <ou> git bisect good
 
-# _TRABALHANDO COM ALIASES (APELIDOS) NO GIT PARA AUTOMATIZAR COMANDOS
+_TRABALHANDO COM ALIASES (APELIDOS) NO GIT PARA AUTOMATIZAR COMANDOS:
 
 # NOTE: ->  Editar o arquivo que fica na pasta do usuário que fica no próprio sistema operacional 
 #       ->  PATH: C:\Users\<nome_do_usuario>\.gitconfig
 #       ->  Abrir o arquivo .gitconfig com um editor de Texto e adicionar a flag [alias] -> (DEMO)
 
-# DEMO
+DEMO:
+
 [alias]
   st = status #-> Abrevia o comando status (Digitar no console -> (git st))
   pl = pull   #-> Abrevia o comando pull   (Digitar no console -> (git pl))
@@ -194,4 +206,55 @@ git bisect bad <ou> git bisect good
   # Exemplo mais complexo por execução via Shell -> comando shell
   # Comando automatizando para sincronizar as Branches
   
-  sc = !git checkout <nome_da_branch_master> && git pull && git checkout <nome_da_branch_criada> && git rebase master <nome_da_branch_master> && git checkout <nome_da_branch_master> && git merge <nome_da_branch_criada> && git push
+  sc = !git checkout <nome_da_branch_master> && git pull && git checkout <nome_da_branch_criada> && 
+  git rebase master <nome_da_branch_master> && git checkout <nome_da_branch_master> &&
+  git merge <nome_da_branch_criada> && git push
+
+
+TAGS:
+
+As tags servem para marcar uma etapa. Imagine que você vai lançar uma versão, que resolve uma série de problemas. 
+Você pode marcar aquela etapa criando uma tag. Assim fica simples de fazer qualquer rollback do projeto para uma tag 
+específica em vez de voltar para um commit. Você sabe que tudo o que foi feito até aquela tag está funcionando.
+
+Criando tags:
+
+git tag versão-da-tag
+
+Listando tags:
+
+git tag -l
+
+Enviando a tag para o repositório:
+
+git push origin master --tags
+
+Removendo as tags criadas localmente:
+
+git tag -d versão-da-tag
+
+Removendo tag no repositório remoto:
+
+git push origin :refs/tags/versão-da-tag
+
+LINK PARA TREINAR GIT ONLINE:
+https://try.github.io/levels/1/challenges/2
+
+
+DICAS ÚTEIS:
+
+Interface gráfica padrão:
+
+gitk
+
+usar saídas do git coloridas:
+
+git config color.ui true
+
+exibir log em apenas uma linha por commit:
+
+git config format.pretty oneline
+
+fazer inclusões interativas:
+
+git add -i
